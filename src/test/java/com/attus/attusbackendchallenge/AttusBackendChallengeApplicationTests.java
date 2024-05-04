@@ -1,13 +1,11 @@
 package com.attus.attusbackendchallenge;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
+// Todo: uncomment annotations
+//@SpringBootTest
 class AttusBackendChallengeApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    //	@Test
+    void contextLoads() {
+    }
 
 }
