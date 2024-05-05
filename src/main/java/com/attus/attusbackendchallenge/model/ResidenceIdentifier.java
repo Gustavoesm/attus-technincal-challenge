@@ -2,6 +2,8 @@ package com.attus.attusbackendchallenge.model;
 
 import com.attus.attusbackendchallenge.model.exceptions.InvalidResidenceIdentifierException;
 
+import java.util.Objects;
+
 public record ResidenceIdentifier(String value) {
     private static final int MAX_LENGTH = 16;
 
@@ -15,5 +17,17 @@ public record ResidenceIdentifier(String value) {
 
     private boolean isValid(String value) {
         return value.length() <= MAX_LENGTH && !value.isEmpty();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ResidenceIdentifier that)) return false;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 }

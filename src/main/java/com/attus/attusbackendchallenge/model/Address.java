@@ -1,5 +1,7 @@
 package com.attus.attusbackendchallenge.model;
 
+import java.util.Objects;
+
 public class Address {
     private PostalCodeFormat postalCode;
     private City city;
@@ -53,5 +55,17 @@ public class Address {
 
     public void setNumber(ResidenceIdentifier number) {
         this.number = number;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Address address)) return false;
+        return Objects.equals(postalCode, address.postalCode) && Objects.equals(city, address.city) && Objects.equals(state, address.state) && Objects.equals(street, address.street) && Objects.equals(number, address.number);
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(postalCode, city, state, street, number);
     }
 }

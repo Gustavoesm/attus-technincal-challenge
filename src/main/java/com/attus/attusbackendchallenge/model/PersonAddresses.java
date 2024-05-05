@@ -27,17 +27,12 @@ public class PersonAddresses {
     }
 
     public void changeMainAddress(Address newMainAddress) {
-        int foundIndex = getAddressIndex(newMainAddress);
-        if(foundIndex < 0 ) {
-            throw new AddressNotFoundException("Address %s does not exists.".formatted(newMainAddress));
-        }
-
-        this.mainAddressIndex = foundIndex;
+        this.mainAddressIndex = getAddressIndex(newMainAddress);
     }
 
     private int getAddressIndex(Address address) {
         int foundIndex = addressList.indexOf(address);
-        if(foundIndex >= 0 ) {
+        if (foundIndex >= 0) {
             return foundIndex;
         }
 
@@ -47,13 +42,19 @@ public class PersonAddresses {
     public void removeAddress(Address address) {
         int foundIndex = getAddressIndex(address);
 
-        if(foundIndex == mainAddressIndex) {
+        if (foundIndex == mainAddressIndex) {
             throw new MainAddressRemovalException("Cannot remove a main address, " +
                     "please select a new main address first.");
-
         }
 
-        addressList.remove(foundIndex);
+        removeAndUpdateMainAddressIndex(foundIndex);
+    }
+
+    private void removeAndUpdateMainAddressIndex(int removalIndex) {
+        addressList.remove(removalIndex);
+        if (removalIndex < this.mainAddressIndex) {
+            this.mainAddressIndex--;
+        }
     }
 
     public void replaceAddress(Address oldAddress, Address newAddress) {
