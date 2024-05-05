@@ -4,15 +4,15 @@ import java.util.Objects;
 
 public class Address {
     private PostalCodeFormat postalCode;
-    private City city;
     private State state;
+    private City city;
     private ResidenceStreet street;
     private ResidenceIdentifier number;
 
-    public Address(PostalCodeFormat postalCode, City city, State state, ResidenceStreet street, ResidenceIdentifier number) {
+    public Address(PostalCodeFormat postalCode, State state, City city, ResidenceStreet street, ResidenceIdentifier number) {
         this.postalCode = postalCode;
-        this.city = city;
         this.state = state;
+        this.city = city;
         this.street = street;
         this.number = number;
     }

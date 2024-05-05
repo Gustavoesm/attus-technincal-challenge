@@ -13,8 +13,8 @@ public class AddressFixture {
     public static Address anAddress() {
         return new Address(
                 aBrazilianCEP(),
-                aCity(),
                 BrazilianStates.SAO_PAULO,
+                aCity(),
                 aStreet(),
                 aResidenceIdentifier()
         );
@@ -23,8 +23,8 @@ public class AddressFixture {
     public static Address anotherAddress() {
         return new Address(
                 anotherBrazilianCEP(),
-                anotherCity(),
                 BrazilianStates.RIO_GRANDE_DO_SUL,
+                anotherCity(),
                 anotherStreet(),
                 anotherResidenceIdentifier()
         );
@@ -33,8 +33,8 @@ public class AddressFixture {
     public static Address aNewAddress() {
         return new Address(
                 aNewBrazilianCEP(),
-                aNewCity(),
                 BrazilianStates.CEARA,
+                aNewCity(),
                 aNewStreet(),
                 aNewResidenceIdentifier()
         );
@@ -43,8 +43,8 @@ public class AddressFixture {
     public static Address aSecondNewAddress() {
         return new Address(
                 aSecondNewBrazilianCEP(),
-                aSecondNewCity(),
                 BrazilianStates.RIO_DE_JANEIRO,
+                aSecondNewCity(),
                 aSecondNewStreet(),
                 aSecondNewResidenceIdentifier()
         );
