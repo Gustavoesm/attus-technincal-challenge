@@ -49,6 +49,4 @@ public class Person {
     public void setBirthDate(BirthDate birthDate) {
         this.birthDate = birthDate;
     }
-
-
 }
