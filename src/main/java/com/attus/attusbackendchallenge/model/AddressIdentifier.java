@@ -1,5 +1,5 @@
 package com.attus.attusbackendchallenge.model;
 
-public interface PersonIdentifier {
+public interface AddressIdentifier {
     String value();
 }

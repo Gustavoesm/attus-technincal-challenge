@@ -1,6 +1,7 @@
 package com.attus.attusbackendchallenge.model;
 
 import com.attus.attusbackendchallenge.model.exceptions.InvalidDateException;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import static com.attus.attusbackendchallenge.fixtures.DateFixture.*;
@@ -22,5 +23,10 @@ public class BirthDateTest {
     void shouldThrowExceptionForDatesBefore1900() {
         assertThrows(InvalidDateException.class, () -> new BirthDate(dateOfDecember31th1899()));
         assertThrows(InvalidDateException.class, () -> new BirthDate(dateOfDecember31th1899()));
+    }
+
+    @Test
+    void verifyEqualsContract() {
+        EqualsVerifier.simple().forClass(BirthDate.class).withNonnullFields("value").verify();
     }
 }

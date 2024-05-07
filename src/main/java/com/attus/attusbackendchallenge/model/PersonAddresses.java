@@ -4,6 +4,7 @@ import com.attus.attusbackendchallenge.model.exceptions.AddressNotFoundException
 import com.attus.attusbackendchallenge.model.exceptions.MainAddressRemovalException;
 
 import java.util.List;
+import java.util.Objects;
 
 public class PersonAddresses {
     private final List<Address> addressList;
@@ -61,5 +62,17 @@ public class PersonAddresses {
         int foundIndex = getAddressIndex(oldAddress);
 
         addressList.set(foundIndex, newAddress);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PersonAddresses addresses)) return false;
+        return mainAddressIndex == addresses.mainAddressIndex && Objects.equals(addressList, addresses.addressList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(addressList, mainAddressIndex);
     }
 }

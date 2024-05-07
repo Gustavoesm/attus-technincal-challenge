@@ -1,0 +1,3 @@
+INSERT INTO person (id, first_name, last_name, birth_date) VALUES (100, 'Julian', 'Brandt', '1996-05-02');
+INSERT INTO person (id, first_name, last_name, birth_date) VALUES (200, 'Mario', 'Gotze', '1992-06-03');
+INSERT INTO address (id, person_id, is_main_address, postal_code, state, city, street, number) VALUES (99, 100, true, '05653-070', 'SAO_PAULO', 'São Paulo', 'Praça Roberto Gomes Pedrosa', '1');

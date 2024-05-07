@@ -1,6 +1,7 @@
 package com.attus.attusbackendchallenge.model;
 
 import com.attus.attusbackendchallenge.model.exceptions.InvalidResidenceStreetException;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -28,5 +29,10 @@ class ResidenceStreetTest {
     void shouldThrowIfNameIsEmptyOrBlank() {
         assertThrows(InvalidResidenceStreetException.class, () -> new ResidenceStreet(""));
         assertThrows(InvalidResidenceStreetException.class, () -> new ResidenceStreet("    "));
+    }
+
+    @Test
+    void verifyEqualsContract() {
+        EqualsVerifier.simple().forClass(ResidenceStreet.class).withNonnullFields("name").verify();
     }
 }

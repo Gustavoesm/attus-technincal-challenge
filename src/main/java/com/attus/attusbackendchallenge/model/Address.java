@@ -3,6 +3,7 @@ package com.attus.attusbackendchallenge.model;
 import java.util.Objects;
 
 public class Address {
+    private AddressIdentifier identifier;
     private PostalCodeFormat postalCode;
     private State state;
     private City city;
@@ -15,6 +16,10 @@ public class Address {
         this.city = city;
         this.street = street;
         this.number = number;
+    }
+
+    public AddressIdentifier identifier() {
+        return identifier;
     }
 
     public PostalCodeFormat postalCode() {
@@ -35,6 +40,10 @@ public class Address {
 
     public ResidenceIdentifier number() {
         return number;
+    }
+
+    public void setIdentifier(AddressIdentifier identifier) {
+        this.identifier = identifier;
     }
 
     public void setPostalCode(PostalCodeFormat postalCode) {

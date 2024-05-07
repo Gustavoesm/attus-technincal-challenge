@@ -1,6 +1,7 @@
 package com.attus.attusbackendchallenge.model;
 
 import com.attus.attusbackendchallenge.model.exceptions.InvalidCityException;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -76,5 +77,10 @@ class CityTest {
         assertThrows(InvalidCityException.class, () -> new City("Tes..te"));
         assertThrows(InvalidCityException.class, () -> new City("Tes''te"));
         assertThrows(InvalidCityException.class, () -> new City("Tes,,te"));
+    }
+
+    @Test
+    void verifyEqualsContract() {
+        EqualsVerifier.simple().forClass(City.class).withNonnullFields("name").verify();
     }
 }

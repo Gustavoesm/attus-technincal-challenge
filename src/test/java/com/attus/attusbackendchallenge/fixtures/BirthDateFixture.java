@@ -14,4 +14,9 @@ public class BirthDateFixture {
         Date june3rd1992 = new Date(707540400000L);
         return new BirthDate(june3rd1992);
     }
+
+    public static BirthDate aNewBirthDate() {
+        Date may311989 = new Date(612586800000L);
+        return new BirthDate(may311989);
+    }
 }

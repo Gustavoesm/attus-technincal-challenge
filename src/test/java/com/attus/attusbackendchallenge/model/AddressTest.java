@@ -17,6 +17,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class AddressTest {
 
     @Test
+    void shouldCorrectlyTestIdentifier() {
+        Address address = anAddress();
+        AddressIdentifier identifier = new DatabaseIdentifier(1);
+        address.setIdentifier(identifier);
+        assertEquals(identifier, address.identifier());
+    }
+
+    @Test
     void shouldCorrectlyRecoverPostalCode() {
         assertEquals(aBrazilianCEP().value(), anAddress().postalCode().value());
     }
@@ -83,6 +91,6 @@ class AddressTest {
 
     @Test
     void verifyEqualsContract() {
-        EqualsVerifier.simple().forClass(Address.class).verify();
+        EqualsVerifier.simple().forClass(Address.class).withIgnoredFields("identifier").verify();
     }
 }

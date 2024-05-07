@@ -2,6 +2,7 @@ package com.attus.attusbackendchallenge.model;
 
 import com.attus.attusbackendchallenge.model.exceptions.AddressNotFoundException;
 import com.attus.attusbackendchallenge.model.exceptions.MainAddressRemovalException;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import static com.attus.attusbackendchallenge.fixtures.AddressFixture.*;
@@ -96,5 +97,10 @@ class PersonAddressesTest {
         testSubject.replaceAddress(anotherAddress(), aSecondNewAddress());
         assertEquals(aSecondNewAddress(), testSubject.getMainAddress());
         assertEquals(3, testSubject.listAll().size());
+    }
+
+    @Test
+    void verifyEqualsContract() {
+        EqualsVerifier.simple().forClass(PersonAddresses.class).verify();
     }
 }

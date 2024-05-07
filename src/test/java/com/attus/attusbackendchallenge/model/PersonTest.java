@@ -1,7 +1,11 @@
 package com.attus.attusbackendchallenge.model;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static com.attus.attusbackendchallenge.fixtures.AddressFixture.aNewAddress;
 import static com.attus.attusbackendchallenge.fixtures.BirthDateFixture.aBirthDate;
 import static com.attus.attusbackendchallenge.fixtures.BirthDateFixture.anotherBirthDate;
 import static com.attus.attusbackendchallenge.fixtures.PersonAddressFixture.aPersonAddresses;
@@ -13,8 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PersonTest {
 
     @Test
-    void shouldCorrectlyRecoverIdentifier() {
-        // TODO: implement when database models are defined
+    void shouldCorrectlyTestIdentifier() {
+        Person person = aPerson();
+        PersonIdentifier identifier = new DatabaseIdentifier(1);
+        person.setIdentifier(identifier);
+        assertEquals(identifier, person.identifier());
     }
 
     @Test
@@ -39,11 +46,6 @@ class PersonTest {
     }
 
     @Test
-    void setIdentifier() {
-        // TODO: implement when database models are defined
-    }
-
-    @Test
     void shouldCorrectlyUpdateFirstName() {
         assertEquals(aFirstName().value(), aPerson().firstName().value());
         Person updatedPerson = aPerson();
@@ -65,5 +67,17 @@ class PersonTest {
         Person updatedPerson = aPerson();
         updatedPerson.setBirthDate(anotherBirthDate());
         assertEquals(anotherBirthDate().value(), anotherPerson().birthDate().value());
+    }
+
+    @Test
+    void shouldCorrectlyReplaceAddresses() {
+        Person person = aPerson();
+        person.setAddresses(new PersonAddresses(List.of(aNewAddress()), 0));
+        assertEquals(aNewAddress(), person.addresses().getMainAddress());
+    }
+
+    @Test
+    void verifyEqualsContract() {
+        EqualsVerifier.simple().forClass(Person.class).withIgnoredFields("identifier").verify();
     }
 }

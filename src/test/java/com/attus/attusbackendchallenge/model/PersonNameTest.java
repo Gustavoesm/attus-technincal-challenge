@@ -1,7 +1,7 @@
 package com.attus.attusbackendchallenge.model;
 
-import com.attus.attusbackendchallenge.model.exceptions.InvalidCityException;
 import com.attus.attusbackendchallenge.model.exceptions.InvalidPersonNameException;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -57,5 +57,10 @@ class PersonNameTest {
         assertThrows(InvalidPersonNameException.class, () -> new PersonName("a"));
         assertThrows(InvalidPersonNameException.class, () -> new PersonName("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
                 "aaaaaaaaaaaaaaaaaaaaa"));
+    }
+
+    @Test
+    void verifyEqualsContract() {
+        EqualsVerifier.simple().forClass(PersonName.class).withNonnullFields("value").verify();
     }
 }

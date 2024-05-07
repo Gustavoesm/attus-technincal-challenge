@@ -18,4 +18,12 @@ public class PersonNameFixture {
     public static PersonName anotherLastName() {
         return new PersonName("Gotze");
     }
+
+    public static PersonName aNewFirstName() {
+        return new PersonName("Marco");
+    }
+
+    public static PersonName aNewLastName() {
+        return new PersonName("Reus");
+    }
 }

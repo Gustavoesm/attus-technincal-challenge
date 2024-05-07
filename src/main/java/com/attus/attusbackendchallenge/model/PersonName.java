@@ -2,6 +2,8 @@ package com.attus.attusbackendchallenge.model;
 
 import com.attus.attusbackendchallenge.model.exceptions.InvalidPersonNameException;
 
+import java.util.Objects;
+
 public record PersonName(String value) {
     private static final int MAX_LENGTH = 64;
 
@@ -16,5 +18,17 @@ public record PersonName(String value) {
         String CONTAINS_ONLY_LETTERS_OR_VALID_PUNCTUATION = "(?i)[a-z]([-'.]? ?[a-zãõáéíóúâêîôûàèìòù])+";
         return name.length() <= MAX_LENGTH
                 && name.matches(CONTAINS_ONLY_LETTERS_OR_VALID_PUNCTUATION);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PersonName that)) return false;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 }

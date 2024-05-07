@@ -1,6 +1,7 @@
 package com.attus.attusbackendchallenge.model;
 
 import com.attus.attusbackendchallenge.model.exceptions.InvalidResidenceIdentifierException;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -27,5 +28,10 @@ class ResidenceIdentifierTest {
         assertThrows(InvalidResidenceIdentifierException.class,
                 () -> new ResidenceIdentifier("12345678901234567"));
 
+    }
+
+    @Test
+    void verifyEqualsContract() {
+        EqualsVerifier.simple().forClass(ResidenceIdentifier.class).withNonnullFields("value").verify();
     }
 }
