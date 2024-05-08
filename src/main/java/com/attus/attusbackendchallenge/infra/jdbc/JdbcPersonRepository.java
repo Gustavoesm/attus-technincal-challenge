@@ -27,17 +27,16 @@ public class JdbcPersonRepository implements PersonRepository {
     private final RowMapper<Person> rowMapper = new PersonRowMapper();
 
     @Override
-    public Person add(Person person) {
+    public PersonIdentifier add(Person person) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String insertSQL = "INSERT INTO person (first_name, last_name, birth_date) VALUES (:first_name, :last_name, :birth_date)";
         jdbcTemplate.update(insertSQL, params(person), keyHolder);
-        person.setIdentifier(new DatabaseIdentifier(keyHolder.getKey().longValue()));
-        return person;
+        return new DatabaseIdentifier(keyHolder.getKey().longValue());
     }
 
     @Override
     public Person find(PersonIdentifier identifier) {
-        String selectSQL = "SELECT * FROM person WHERE id = :id";
+        String selectSQL = "SELECT * FROM person WHERE id = :id FOR UPDATE";
         try {
             return jdbcTemplate.queryForObject(selectSQL, params(identifier), rowMapper);
         } catch (EmptyResultDataAccessException e) {

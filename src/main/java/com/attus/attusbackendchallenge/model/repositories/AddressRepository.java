@@ -15,4 +15,6 @@ public interface AddressRepository {
     boolean replaceAddress(AddressIdentifier replacedIndex, Address newAddress);
 
     boolean remove(AddressIdentifier index);
+
+    void clearAddressesFrom(PersonIdentifier personId);
 }

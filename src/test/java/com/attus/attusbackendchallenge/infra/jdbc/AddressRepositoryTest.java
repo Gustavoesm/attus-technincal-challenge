@@ -140,4 +140,17 @@ class AddressRepositoryTest {
     void shouldReturnFalseWhenUnableToRemoveAddress() {
         assertFalse(repository.remove(aNonExistentAddressId()));
     }
+
+    @Test
+    void shouldCorrectlyClearAllAddressesForPerson() {
+        repository.clearAddressesFrom(aPersonWithAnAddress());
+        assertNull(repository.findIndexOf(aPersonWithAnAddress(), anAddress()));
+    }
+
+    @Test
+    void shouldDoNothingWhenClearingAddressesForNonExistentPerson() {
+        AddressIdentifier id = repository.findIndexOf(aPersonWithAnAddress(), anAddress());
+        assertEquals(anAddressId().value(), id.value());
+        assertDoesNotThrow(() -> repository.clearAddressesFrom(aPersonWithNoAddress()));
+    }
 }

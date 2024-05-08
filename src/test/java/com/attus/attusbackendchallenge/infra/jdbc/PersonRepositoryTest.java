@@ -2,6 +2,7 @@ package com.attus.attusbackendchallenge.infra.jdbc;
 
 import com.attus.attusbackendchallenge.infra.exceptions.PersonNotFoundException;
 import com.attus.attusbackendchallenge.model.Person;
+import com.attus.attusbackendchallenge.model.PersonIdentifier;
 import com.attus.attusbackendchallenge.model.repositories.PersonRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +25,9 @@ class PersonRepositoryTest {
     private PersonRepository repository;
 
     @Test
-    void shouldCorrectlyAddANewPerson() {
-        Person addedPerson = repository.add(aNewPerson());
-        assertEquals(aNewPerson(), addedPerson);
-    }
-
-    @Test
-    void shouldCorrectlyAssignIdToNewPerson() {
-        Person addedPerson = repository.add(aNewPerson());
-        assertFalse(addedPerson.identifier().value().isEmpty());
-        assertFalse(addedPerson.identifier().value().isBlank());
+    void shouldCorrectlyAddANewPersonAndReturnId() {
+        PersonIdentifier id = repository.add(aNewPerson());
+        assertEquals("1", id.value());
     }
 
     @Test

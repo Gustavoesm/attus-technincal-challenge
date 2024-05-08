@@ -6,7 +6,7 @@ import com.attus.attusbackendchallenge.model.PersonIdentifier;
 import java.util.List;
 
 public interface PersonRepository {
-    Person add(Person person);
+    PersonIdentifier add(Person person);
 
     Person find(PersonIdentifier identifier);
 

@@ -39,7 +39,7 @@ public class JdbcAddressRepository implements AddressRepository {
 
     @Override
     public PersonAddresses personAddresses(PersonIdentifier identifier) {
-        String listAddressSQL = "SELECT * FROM address WHERE person_id = :person_id";
+        String listAddressSQL = "SELECT * FROM address WHERE person_id = :person_id FOR UPDATE";
         try {
             return jdbcTemplate.queryForObject(listAddressSQL, namedParameters(identifier), personAddressesRowMapper);
         } catch (EmptyResultDataAccessException e) {
@@ -70,5 +70,11 @@ public class JdbcAddressRepository implements AddressRepository {
     public boolean remove(AddressIdentifier id) {
         String removeSQL = "DELETE FROM address WHERE id = :id";
         return jdbcTemplate.update(removeSQL, namedParameters(id)) > 0;
+    }
+
+    @Override
+    public void clearAddressesFrom(PersonIdentifier personId) {
+        String clearFromPersonSQL = "DELETE FROM address WHERE person_id = :person_id";
+        jdbcTemplate.update(clearFromPersonSQL, namedParameters(personId));
     }
 }

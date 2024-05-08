@@ -3,6 +3,9 @@ package com.attus.attusbackendchallenge.fixtures;
 import com.attus.attusbackendchallenge.model.AddressIdentifier;
 import com.attus.attusbackendchallenge.model.DatabaseIdentifier;
 import com.attus.attusbackendchallenge.model.PersonIdentifier;
+import com.attus.attusbackendchallenge.service.dto.PersonDto;
+
+import java.util.Date;
 
 public class IntegrationTestsFixture {
     public static PersonIdentifier aPersonWithAnAddress() {
@@ -23,5 +26,9 @@ public class IntegrationTestsFixture {
 
     public static AddressIdentifier aNonExistentAddressId() {
         return new DatabaseIdentifier(-1);
+    }
+
+    public static PersonDto aPersonDto() {
+        return new PersonDto(null, "Julian", "Brandt", new Date(831006000000L), null, null);
     }
 }
