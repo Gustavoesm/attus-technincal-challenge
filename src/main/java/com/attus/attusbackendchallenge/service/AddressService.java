@@ -5,6 +5,7 @@ import com.attus.attusbackendchallenge.model.Address;
 import com.attus.attusbackendchallenge.model.AddressIdentifier;
 import com.attus.attusbackendchallenge.model.PersonAddresses;
 import com.attus.attusbackendchallenge.model.PersonIdentifier;
+import com.attus.attusbackendchallenge.model.exceptions.AddressNotFoundException;
 import com.attus.attusbackendchallenge.model.repositories.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,17 +36,17 @@ public class AddressService {
         return repository.personAddresses(identifier);
     }
 
-    public Address replaceAddress(PersonIdentifier personIdentifier, Address oldAddress, Address newAddress) {
-        AddressIdentifier oldAddressId = repository.findIndexOf(personIdentifier, oldAddress);
-        newAddress.setIdentifier(oldAddressId);
-        repository.replaceAddress(oldAddressId, newAddress);
-        return newAddress;
+    public Address replaceAddress(AddressIdentifier addressId, Address newValues) {
+        repository.replaceAddress(addressId, newValues);
+        newValues.setIdentifier(addressId);
+        return newValues;
     }
 
-    public Address removeAddress(PersonIdentifier personIdentifier, Address address) {
-        AddressIdentifier id = repository.findIndexOf(personIdentifier, address);
-        address.setIdentifier(id);
-        repository.remove(id);
+    public Address removeAddress(AddressIdentifier id) {
+        Address address = repository.find(id);
+        if (!repository.remove(id)) {
+            throw new AddressNotFoundException("Unable to remove address");
+        }
         return address;
     }
 

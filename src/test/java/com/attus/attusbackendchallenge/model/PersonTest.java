@@ -19,7 +19,7 @@ class PersonTest {
     @Test
     void shouldCorrectlyTestIdentifier() {
         Person person = aPerson();
-        PersonIdentifier identifier = new DatabaseIdentifier(1);
+        PersonIdentifier identifier = DatabaseIdentifier.of(1);
         person.setIdentifier(identifier);
         assertEquals(identifier, person.identifier());
     }

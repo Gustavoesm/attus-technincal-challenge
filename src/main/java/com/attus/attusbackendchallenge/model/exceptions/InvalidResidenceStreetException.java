@@ -1,6 +1,9 @@
 package com.attus.attusbackendchallenge.model.exceptions;
 
-public class InvalidResidenceStreetException extends RuntimeException {
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(reason = "Invalid street name")
+public class InvalidResidenceStreetException extends InvalidFieldException {
     public InvalidResidenceStreetException(String message) {
         super(message);
     }

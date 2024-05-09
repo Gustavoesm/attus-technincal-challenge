@@ -1,8 +1,10 @@
 package com.attus.attusbackendchallenge.service;
 
-import com.attus.attusbackendchallenge.model.*;
+import com.attus.attusbackendchallenge.infra.exceptions.InvalidPersonException;
+import com.attus.attusbackendchallenge.model.DatabaseIdentifier;
+import com.attus.attusbackendchallenge.model.Person;
+import com.attus.attusbackendchallenge.model.PersonIdentifier;
 import com.attus.attusbackendchallenge.model.repositories.PersonRepository;
-import com.attus.attusbackendchallenge.service.dto.PersonDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,10 +12,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 
-import static com.attus.attusbackendchallenge.fixtures.IntegrationTestsFixture.aPersonDto;
 import static com.attus.attusbackendchallenge.fixtures.IntegrationTestsFixture.aPersonWithAnAddress;
-import static com.attus.attusbackendchallenge.service.helpers.PersonServiceHelper.toPerson;
+import static com.attus.attusbackendchallenge.fixtures.PersonFixture.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -31,11 +33,18 @@ class PersonServiceTest {
 
     @Test
     void shouldDelegateAddToRepository() {
-        PersonDto dto = aPersonDto();
+        Person person = aPerson();
         when(repository.add(any())).thenReturn(aPersonWithAnAddress());
-        Person returnedPerson = service.addPerson(dto);
-        verify(repository).add(toPerson(dto));
+        Person returnedPerson = service.addPerson(person);
+        verify(repository).add(person);
         assertEquals(aPersonWithAnAddress().value(), returnedPerson.identifier().value());
+    }
+
+    @Test
+    void shouldThrowWhenAttemptingToAddWithoutRequiredFields() {
+        assertThrows(InvalidPersonException.class, () -> service.addPerson(aPersonWithoutFirstName()));
+        assertThrows(InvalidPersonException.class, () -> service.addPerson(aPersonWithoutLastName()));
+        assertThrows(InvalidPersonException.class, () -> service.addPerson(aPersonWithoutBirthDate()));
     }
 
     @Test
@@ -51,14 +60,11 @@ class PersonServiceTest {
     @Test
     void shouldDelegateUpdateToRepository() {
         PersonIdentifier id = aPersonWithAnAddress();
-        PersonDto dto = aPersonDto();
+        Person person = aPerson();
         Person mockedPerson = mock(Person.class);
         when(repository.find(id)).thenReturn(mockedPerson);
-        service.updatePerson(id, dto);
+        service.updatePerson(id, person);
         verify(repository).find(id);
-        verify(mockedPerson).setFirstName(new PersonName(dto.firstName()));
-        verify(mockedPerson).setLastName(new PersonName(dto.lastName()));
-        verify(mockedPerson).setBirthDate(new BirthDate(dto.birthDate()));
         verify(repository).replace(id, mockedPerson);
     }
 
@@ -75,9 +81,8 @@ class PersonServiceTest {
 
     @Test
     void shouldListEveryPersonDelegatingTasksToRepositoryAndAddressService() {
-        PersonIdentifier id = new DatabaseIdentifier(999);
+        PersonIdentifier id = DatabaseIdentifier.of(999);
         Person mockedPerson = mock(Person.class);
-        Address mockedAddress = mock(Address.class);
         when(repository.listAll()).thenReturn(List.of(mockedPerson, mockedPerson, mockedPerson));
         when(mockedPerson.identifier()).thenReturn(id);
         service.listEveryPerson();

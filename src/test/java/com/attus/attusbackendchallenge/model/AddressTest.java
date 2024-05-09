@@ -19,7 +19,7 @@ class AddressTest {
     @Test
     void shouldCorrectlyTestIdentifier() {
         Address address = anAddress();
-        AddressIdentifier identifier = new DatabaseIdentifier(1);
+        AddressIdentifier identifier = DatabaseIdentifier.of(1);
         address.setIdentifier(identifier);
         assertEquals(identifier, address.identifier());
     }

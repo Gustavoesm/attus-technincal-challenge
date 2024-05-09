@@ -2,12 +2,13 @@ package com.attus.attusbackendchallenge;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class AttusBackendChallengeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AttusBackendChallengeApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(AttusBackendChallengeApplication.class, args);
+    }
 
 }

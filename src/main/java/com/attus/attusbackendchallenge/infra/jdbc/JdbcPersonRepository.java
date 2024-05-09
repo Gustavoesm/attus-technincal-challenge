@@ -7,7 +7,7 @@ import com.attus.attusbackendchallenge.model.Person;
 import com.attus.attusbackendchallenge.model.PersonIdentifier;
 import com.attus.attusbackendchallenge.model.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -31,17 +31,19 @@ public class JdbcPersonRepository implements PersonRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String insertSQL = "INSERT INTO person (first_name, last_name, birth_date) VALUES (:first_name, :last_name, :birth_date)";
         jdbcTemplate.update(insertSQL, params(person), keyHolder);
-        return new DatabaseIdentifier(keyHolder.getKey().longValue());
+        return DatabaseIdentifier.of(keyHolder.getKey().longValue());
     }
 
     @Override
     public Person find(PersonIdentifier identifier) {
         String selectSQL = "SELECT * FROM person WHERE id = :id FOR UPDATE";
+        Person person;
         try {
-            return jdbcTemplate.queryForObject(selectSQL, params(identifier), rowMapper);
-        } catch (EmptyResultDataAccessException e) {
-            throw new PersonNotFoundException("Could not find an entry for this person.", e);
+            person = jdbcTemplate.queryForObject(selectSQL, params(identifier), rowMapper);
+        } catch (DataAccessException e) {
+            throw new PersonNotFoundException("Could not find an entry for this person.");
         }
+        return person;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.attus.attusbackendchallenge.model.Address;
 import com.attus.attusbackendchallenge.model.AddressIdentifier;
 import com.attus.attusbackendchallenge.model.PersonAddresses;
 import com.attus.attusbackendchallenge.model.PersonIdentifier;
+import com.attus.attusbackendchallenge.model.exceptions.AddressNotFoundException;
 import com.attus.attusbackendchallenge.model.repositories.AddressRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import static com.attus.attusbackendchallenge.fixtures.AddressFixture.anAddress;
 import static com.attus.attusbackendchallenge.fixtures.AddressFixture.anotherAddress;
 import static com.attus.attusbackendchallenge.fixtures.IntegrationTestsFixture.*;
 import static com.attus.attusbackendchallenge.fixtures.PersonAddressFixture.aPersonAddresses;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -57,24 +59,30 @@ class AddressServiceTest {
 
     @Test
     void shouldDelegateReplaceToRepository() {
-        PersonIdentifier personId = aPersonWithAnAddress();
         AddressIdentifier addressId = anAddressId();
-        Address oldAddress = anAddress();
-        Address newAddress = mock(Address.class);
-        when(repository.findIndexOf(personId, oldAddress)).thenReturn(addressId);
-        service.replaceAddress(personId, oldAddress, newAddress);
-        verify(newAddress).setIdentifier(addressId);
-        verify(repository).replaceAddress(addressId, newAddress);
+        Address mock = mock(Address.class);
+        service.replaceAddress(addressId, mock);
+        verify(mock).setIdentifier(addressId);
+        verify(repository).replaceAddress(addressId, mock);
     }
 
     @Test
     void shouldDelegateRemoveToRepository() {
-        PersonIdentifier personId = aPersonWithAnAddress();
         Address address = anAddress();
         AddressIdentifier addressId = anAddressId();
-        when(repository.findIndexOf(personId, address)).thenReturn(addressId);
-        service.removeAddress(personId, address);
+        when(repository.find(addressId)).thenReturn(address);
+        when(repository.remove(addressId)).thenReturn(true);
+        service.removeAddress(addressId);
         verify(repository).remove(addressId);
+    }
+
+    @Test
+    void shouldThrowWhenRepositoryUnableToRemove() {
+        Address mockedAddress = mock(Address.class);
+        AddressIdentifier mockedId = mock(AddressIdentifier.class);
+        when(repository.find(mockedId)).thenReturn(mockedAddress);
+        when(repository.remove(mockedId)).thenReturn(false);
+        assertThrows(AddressNotFoundException.class, () -> service.removeAddress(mockedId));
     }
 
     @Test

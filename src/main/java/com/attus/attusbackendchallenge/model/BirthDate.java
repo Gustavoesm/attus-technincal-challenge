@@ -14,7 +14,11 @@ public record BirthDate(Date value) {
 
     private boolean isValid(Date value) {
         Date JANUARY_1ST_1900 = new Date(-2208977612000L);
-        return !value.before(JANUARY_1ST_1900);
+        return !value.before(JANUARY_1ST_1900) && !value.after(today());
+    }
+
+    private Date today() {
+        return new Date();
     }
 
     @Override

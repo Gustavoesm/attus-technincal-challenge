@@ -1,6 +1,5 @@
 package com.attus.attusbackendchallenge.infra.helpers;
 
-import com.attus.attusbackendchallenge.infra.exceptions.AddressDataAccessException;
 import com.attus.attusbackendchallenge.model.*;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -32,16 +31,6 @@ public class AddressRepositoryHelper {
         return params;
     }
 
-    public static MapSqlParameterSource namedParameters(PersonIdentifier personId, Address address) {
-        MapSqlParameterSource params = new MapSqlParameterSource("person_id", Long.parseLong(personId.value()));
-        params.addValue("postal_code", address.postalCode().value());
-        params.addValue("state", address.state().toString());
-        params.addValue("city", address.city().name());
-        params.addValue("street", address.street().name());
-        params.addValue("number", address.number().value());
-        return params;
-    }
-
     public static MapSqlParameterSource namedParameters(AddressIdentifier id) {
         return new MapSqlParameterSource("id", Long.parseLong(id.value()));
     }
@@ -53,11 +42,12 @@ public class AddressRepositoryHelper {
     public static class PersonAddressesRowMapper implements RowMapper<PersonAddresses> {
         @Override
         public PersonAddresses mapRow(ResultSet rs, int rowNum) throws SQLException {
+            AddressRowMapper addressRowMapper = new AddressRowMapper();
             List<Address> addressList = new ArrayList<>();
             int mainAddressIndex = -1;
             int row = 0;
             do {
-                addressList.add(mapAddressFrom(rs));
+                addressList.add(addressRowMapper.mapRow(rs, rowNum));
                 if (rs.getBoolean("is_main_address")) {
                     mainAddressIndex = row;
                 }
@@ -66,19 +56,21 @@ public class AddressRepositoryHelper {
 
             return new PersonAddresses(addressList, mainAddressIndex);
         }
+    }
 
-        private Address mapAddressFrom(ResultSet rs) {
-            try {
-                return new Address(
-                        new BrazilianCEP(rs.getString("postal_code")),
-                        BrazilianStates.valueOf(rs.getString("state")),
-                        new City(rs.getString("city")),
-                        new ResidenceStreet(rs.getString("street")),
-                        new ResidenceIdentifier(rs.getString("number"))
-                );
-            } catch (SQLException | IllegalArgumentException e) {
-                throw new AddressDataAccessException("An error occurred while recovering address values.", e);
-            }
+    public static class AddressRowMapper implements RowMapper<Address> {
+
+        @Override
+        public Address mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Address address = new Address(
+                    new BrazilianCEP(rs.getString("postal_code")),
+                    BrazilianStates.valueOf(rs.getString("state")),
+                    new City(rs.getString("city")),
+                    new ResidenceStreet(rs.getString("street")),
+                    new ResidenceIdentifier(rs.getString("number"))
+            );
+            address.setIdentifier(DatabaseIdentifier.of(rs.getInt("id")));
+            return address;
         }
     }
 }

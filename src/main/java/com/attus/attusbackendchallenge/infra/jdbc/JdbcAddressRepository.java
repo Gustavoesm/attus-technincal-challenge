@@ -1,6 +1,7 @@
 package com.attus.attusbackendchallenge.infra.jdbc;
 
 import com.attus.attusbackendchallenge.infra.exceptions.PersonNotFoundException;
+import com.attus.attusbackendchallenge.infra.helpers.AddressRepositoryHelper.AddressRowMapper;
 import com.attus.attusbackendchallenge.infra.helpers.AddressRepositoryHelper.PersonAddressesRowMapper;
 import com.attus.attusbackendchallenge.model.*;
 import com.attus.attusbackendchallenge.model.repositories.AddressRepository;
@@ -22,6 +23,9 @@ public class JdbcAddressRepository implements AddressRepository {
 
     private final RowMapper<PersonAddresses> personAddressesRowMapper = new PersonAddressesRowMapper();
 
+    private final RowMapper<Address> addressRowMapper = new AddressRowMapper();
+
+
     @Override
     public Address add(PersonIdentifier identifier, Address address, boolean isMainAddress) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -29,10 +33,10 @@ public class JdbcAddressRepository implements AddressRepository {
                 "street, number) VALUES (:person_id, :is_main_address, :postal_code, :state, :city, :street, :number)";
         try {
             jdbcTemplate.update(insertSQL, namedParameters(identifier, address, isMainAddress), keyHolder);
-            address.setIdentifier(new DatabaseIdentifier(keyHolder.getKey().longValue()));
+            address.setIdentifier(DatabaseIdentifier.of(keyHolder.getKey().longValue()));
             return address;
         } catch (DataIntegrityViolationException e) {
-            throw new PersonNotFoundException("There was a problem while attempting to associate this address to a person.", e)
+            throw new PersonNotFoundException("There was a problem while attempting to associate this address to a person.")
                     ;
         }
     }
@@ -43,20 +47,18 @@ public class JdbcAddressRepository implements AddressRepository {
         try {
             return jdbcTemplate.queryForObject(listAddressSQL, namedParameters(identifier), personAddressesRowMapper);
         } catch (EmptyResultDataAccessException e) {
-            throw new PersonNotFoundException("No addresses found for person (%s).".formatted(identifier.value()));
+            return null;
         }
     }
 
     @Override
-    public AddressIdentifier findIndexOf(PersonIdentifier identifier, Address address) {
-        String findSQL = "SELECT id FROM address WHERE person_id = :person_id AND postal_code = :postal_code AND " +
-                "state = :state AND city = :city AND street = :street AND number = :number";
+    public Address find(AddressIdentifier identifier) {
+        String findSQL = "SELECT * FROM address WHERE id = :id FOR UPDATE";
         try {
-            return new DatabaseIdentifier(jdbcTemplate.queryForObject(findSQL, namedParameters(identifier, address), Long.class));
+            return jdbcTemplate.queryForObject(findSQL, namedParameters(identifier), addressRowMapper);
         } catch (EmptyResultDataAccessException | NullPointerException e) {
             return null;
         }
-
     }
 
     @Override

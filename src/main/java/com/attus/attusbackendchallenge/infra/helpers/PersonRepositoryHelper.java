@@ -36,7 +36,7 @@ public class PersonRepositoryHelper {
                     new PersonName(rs.getString("last_name")),
                     new BirthDate(rs.getDate("birth_date"))
             );
-            person.setIdentifier(new DatabaseIdentifier(rs.getLong("id")));
+            person.setIdentifier(DatabaseIdentifier.of(rs.getLong("id")));
 
             return person;
         }

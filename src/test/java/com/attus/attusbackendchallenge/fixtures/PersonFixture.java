@@ -33,4 +33,31 @@ public class PersonFixture {
                 aNewPersonAddresses()
         );
     }
+
+    public static Person aPersonWithoutFirstName() {
+        return new Person(
+                null,
+                aLastName(),
+                aBirthDate(),
+                aPersonAddresses()
+        );
+    }
+
+    public static Person aPersonWithoutLastName() {
+        return new Person(
+                aFirstName(),
+                null,
+                aBirthDate(),
+                aPersonAddresses()
+        );
+    }
+
+    public static Person aPersonWithoutBirthDate() {
+        return new Person(
+                aFirstName(),
+                aLastName(),
+                null,
+                aPersonAddresses()
+        );
+    }
 }

@@ -1,4 +1,4 @@
-package com.attus.attusbackendchallenge.service.dto;
+package com.attus.attusbackendchallenge.controller.dto;
 
 public record AddressDto(
         Integer id,

@@ -10,7 +10,7 @@ public interface AddressRepository {
 
     PersonAddresses personAddresses(PersonIdentifier identifier);
 
-    AddressIdentifier findIndexOf(PersonIdentifier identifier, Address address);
+    Address find(AddressIdentifier identifier);
 
     boolean replaceAddress(AddressIdentifier replacedIndex, Address newAddress);
 

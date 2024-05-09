@@ -1,6 +1,8 @@
 package com.attus.attusbackendchallenge.model;
 
-public enum BrazilianStates implements State{
+import com.attus.attusbackendchallenge.model.exceptions.InvalidBrazilianStateException;
+
+public enum BrazilianStates implements State {
     ACRE("AC", "Acre"),
     ALAGOAS("AL", "Alagoas"),
     AMAPA("AP", "Amapá"),
@@ -35,6 +37,15 @@ public enum BrazilianStates implements State{
     BrazilianStates(String shortName, String longName) {
         this.shortName = shortName;
         this.longName = longName;
+    }
+
+    public static BrazilianStates from(String value) {
+        for (BrazilianStates state : BrazilianStates.values()) {
+            if (state.shortName().equals(value) || state.longName().equals(value)) {
+                return state;
+            }
+        }
+        throw new InvalidBrazilianStateException("Unable to find a brazilian state with name: %s".formatted(value));
     }
 
     @Override

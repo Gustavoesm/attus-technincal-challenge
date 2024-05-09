@@ -26,6 +26,11 @@ public class BirthDateTest {
     }
 
     @Test
+    void shouldThrowExceptionForDatesAfterCurrentMoment() {
+        assertThrows(InvalidDateException.class, () -> new BirthDate(dateOfTomorrow()));
+    }
+
+    @Test
     void verifyEqualsContract() {
         EqualsVerifier.simple().forClass(BirthDate.class).withNonnullFields("value").verify();
     }
