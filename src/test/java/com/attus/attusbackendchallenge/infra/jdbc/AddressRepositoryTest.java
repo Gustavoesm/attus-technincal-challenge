@@ -5,6 +5,7 @@ import com.attus.attusbackendchallenge.model.Address;
 import com.attus.attusbackendchallenge.model.AddressIdentifier;
 import com.attus.attusbackendchallenge.model.PersonAddresses;
 import com.attus.attusbackendchallenge.model.PersonIdentifier;
+import com.attus.attusbackendchallenge.model.exceptions.AddressNotFoundException;
 import com.attus.attusbackendchallenge.model.repositories.AddressRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,9 +80,8 @@ class AddressRepositoryTest {
     }
 
     @Test
-    void shouldReturnNullWhenAttemptingToFindNonExistentAddress() {
-        Address address = repository.find(aNonExistentAddressId());
-        assertNull(address);
+    void shouldThrowWhenAttemptingToFindNonExistentAddress() {
+        assertThrows(AddressNotFoundException.class, () -> repository.find(aNonExistentAddressId()));
     }
 
     @Test
@@ -137,7 +137,7 @@ class AddressRepositoryTest {
     @Test
     void shouldCorrectlyClearAllAddressesForPerson() {
         repository.clearAddressesFrom(aPersonWithAnAddress());
-        assertNull(repository.find(anAddressId()));
+        assertThrows(AddressNotFoundException.class, () -> repository.find(anAddressId()));
     }
 
     @Test

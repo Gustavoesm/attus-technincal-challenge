@@ -15,7 +15,7 @@ public record PersonName(String value) {
     }
 
     private boolean isValid(String name) {
-        String CONTAINS_ONLY_LETTERS_OR_VALID_PUNCTUATION = "(?i)[a-z]([-'.]? ?[a-zãõáéíóúâêîôûàèìòù])+";
+        String CONTAINS_ONLY_LETTERS_OR_VALID_PUNCTUATION = "(?i)[a-z]([-'.]? ?[a-zçãõáéíóúâêîôûàèìòù])+";
         return name.length() <= MAX_LENGTH
                 && name.matches(CONTAINS_ONLY_LETTERS_OR_VALID_PUNCTUATION);
     }

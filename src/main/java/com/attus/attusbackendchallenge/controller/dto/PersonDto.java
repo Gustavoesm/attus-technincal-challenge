@@ -6,12 +6,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.util.Date;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
+
 @JsonInclude(Include.NON_NULL)
 public record PersonDto(
         Integer id,
         String firstName,
         String lastName,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+        @JsonFormat(shape = STRING, pattern = "dd-MM-yyyy")
         Date birthDate,
         PersonAddressesDto addresses
 ) {

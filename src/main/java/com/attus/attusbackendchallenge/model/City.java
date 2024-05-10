@@ -16,7 +16,7 @@ public record City(String name) {
     }
 
     private boolean isValid(String name) {
-        final String containsOnlyLettersAndValidPunctuation = "(?i)[a-z]([-',.]? ?[a-zãõáéíóúâêîôûàèìòù])+";
+        final String containsOnlyLettersAndValidPunctuation = "(?i)[a-z]([-',.]? ?[a-zçãõáéíóúâêîôûàèìòù])+";
         return name.length() <= MAX_LENGTH
                 && name.matches(containsOnlyLettersAndValidPunctuation);
     }

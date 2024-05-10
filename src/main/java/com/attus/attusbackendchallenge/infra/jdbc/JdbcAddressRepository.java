@@ -4,6 +4,7 @@ import com.attus.attusbackendchallenge.infra.exceptions.PersonNotFoundException;
 import com.attus.attusbackendchallenge.infra.helpers.AddressRepositoryHelper.AddressRowMapper;
 import com.attus.attusbackendchallenge.infra.helpers.AddressRepositoryHelper.PersonAddressesRowMapper;
 import com.attus.attusbackendchallenge.model.*;
+import com.attus.attusbackendchallenge.model.exceptions.AddressNotFoundException;
 import com.attus.attusbackendchallenge.model.repositories.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -57,7 +58,7 @@ public class JdbcAddressRepository implements AddressRepository {
         try {
             return jdbcTemplate.queryForObject(findSQL, namedParameters(identifier), addressRowMapper);
         } catch (EmptyResultDataAccessException | NullPointerException e) {
-            return null;
+            throw new AddressNotFoundException("Unable to find address");
         }
     }
 
@@ -78,5 +79,11 @@ public class JdbcAddressRepository implements AddressRepository {
     public void clearAddressesFrom(PersonIdentifier personId) {
         String clearFromPersonSQL = "DELETE FROM address WHERE person_id = :person_id";
         jdbcTemplate.update(clearFromPersonSQL, namedParameters(personId));
+    }
+
+    @Override
+    public PersonIdentifier findOwner(AddressIdentifier id) {
+        String findOwnerSQL = "SELECT person_id FROM address WHERE id = :id";
+        return DatabaseIdentifier.of(jdbcTemplate.queryForObject(findOwnerSQL, namedParameters(id), Long.class));
     }
 }

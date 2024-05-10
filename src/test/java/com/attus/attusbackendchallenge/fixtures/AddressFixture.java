@@ -5,19 +5,22 @@ import com.attus.attusbackendchallenge.model.BrazilianStates;
 
 import static com.attus.attusbackendchallenge.fixtures.BrazilianCEPFixture.*;
 import static com.attus.attusbackendchallenge.fixtures.CityFixture.*;
+import static com.attus.attusbackendchallenge.fixtures.IntegrationTestsFixture.anAddressId;
 import static com.attus.attusbackendchallenge.fixtures.ResidenceIdentifierFixture.*;
 import static com.attus.attusbackendchallenge.fixtures.StreetNameFixture.*;
 
 public class AddressFixture {
 
     public static Address anAddress() {
-        return new Address(
+        Address address = new Address(
                 aBrazilianCEP(),
                 BrazilianStates.SAO_PAULO,
                 aCity(),
                 aStreet(),
-                aResidenceIdentifier()
+                aNumber()
         );
+        address.setIdentifier(anAddressId());
+        return address;
     }
 
     public static Address anotherAddress() {
@@ -26,7 +29,7 @@ public class AddressFixture {
                 BrazilianStates.RIO_GRANDE_DO_SUL,
                 anotherCity(),
                 anotherStreet(),
-                anotherResidenceIdentifier()
+                anotherNumber()
         );
     }
 
@@ -36,7 +39,7 @@ public class AddressFixture {
                 BrazilianStates.CEARA,
                 aNewCity(),
                 aNewStreet(),
-                aNewResidenceIdentifier()
+                aNewNumber()
         );
     }
 

@@ -17,4 +17,6 @@ public interface AddressRepository {
     boolean remove(AddressIdentifier index);
 
     void clearAddressesFrom(PersonIdentifier personId);
+
+    PersonIdentifier findOwner(AddressIdentifier id);
 }

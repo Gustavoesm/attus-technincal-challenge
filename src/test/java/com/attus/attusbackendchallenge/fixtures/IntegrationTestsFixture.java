@@ -1,5 +1,6 @@
 package com.attus.attusbackendchallenge.fixtures;
 
+import com.attus.attusbackendchallenge.controller.dto.AddressDto;
 import com.attus.attusbackendchallenge.model.AddressIdentifier;
 import com.attus.attusbackendchallenge.model.DatabaseIdentifier;
 import com.attus.attusbackendchallenge.model.PersonIdentifier;
@@ -23,5 +24,9 @@ public class IntegrationTestsFixture {
 
     public static AddressIdentifier aNonExistentAddressId() {
         return DatabaseIdentifier.of(-1);
+    }
+
+    public static AddressDto aRandomDto() {
+        return new AddressDto(null, "12345-777", "AC", "city", "street", "8A");
     }
 }

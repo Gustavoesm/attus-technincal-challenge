@@ -8,8 +8,8 @@ import static com.attus.attusbackendchallenge.fixtures.BrazilianCEPFixture.aBraz
 import static com.attus.attusbackendchallenge.fixtures.BrazilianCEPFixture.anotherBrazilianCEP;
 import static com.attus.attusbackendchallenge.fixtures.CityFixture.aCity;
 import static com.attus.attusbackendchallenge.fixtures.CityFixture.anotherCity;
-import static com.attus.attusbackendchallenge.fixtures.ResidenceIdentifierFixture.aResidenceIdentifier;
-import static com.attus.attusbackendchallenge.fixtures.ResidenceIdentifierFixture.anotherResidenceIdentifier;
+import static com.attus.attusbackendchallenge.fixtures.ResidenceIdentifierFixture.aNumber;
+import static com.attus.attusbackendchallenge.fixtures.ResidenceIdentifierFixture.anotherNumber;
 import static com.attus.attusbackendchallenge.fixtures.StreetNameFixture.aStreet;
 import static com.attus.attusbackendchallenge.fixtures.StreetNameFixture.anotherStreet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,7 +46,7 @@ class AddressTest {
 
     @Test
     void shouldCorrectlyRecoverResidenceIdentifier() {
-        assertEquals(aResidenceIdentifier().value(), anAddress().number().value());
+        assertEquals(aNumber().value(), anAddress().number().value());
     }
 
     @Test
@@ -83,10 +83,10 @@ class AddressTest {
 
     @Test
     void shouldCorrectlyUpdateResidenceIdentifier() {
-        assertEquals(aResidenceIdentifier().value(), anAddress().number().value());
+        assertEquals(aNumber().value(), anAddress().number().value());
         Address updatedAddress = anAddress();
-        updatedAddress.setNumber(anotherResidenceIdentifier());
-        assertEquals(anotherResidenceIdentifier().value(), updatedAddress.number().value());
+        updatedAddress.setNumber(anotherNumber());
+        assertEquals(anotherNumber().value(), updatedAddress.number().value());
     }
 
     @Test

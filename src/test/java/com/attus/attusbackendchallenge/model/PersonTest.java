@@ -3,9 +3,7 @@ package com.attus.attusbackendchallenge.model;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static com.attus.attusbackendchallenge.fixtures.AddressFixture.aNewAddress;
+import static com.attus.attusbackendchallenge.fixtures.AddressFixture.anAddress;
 import static com.attus.attusbackendchallenge.fixtures.BirthDateFixture.aBirthDate;
 import static com.attus.attusbackendchallenge.fixtures.BirthDateFixture.anotherBirthDate;
 import static com.attus.attusbackendchallenge.fixtures.PersonAddressFixture.aPersonAddresses;
@@ -71,9 +69,9 @@ class PersonTest {
 
     @Test
     void shouldCorrectlyReplaceAddresses() {
-        Person person = aPerson();
-        person.setAddresses(new PersonAddresses(List.of(aNewAddress()), 0));
-        assertEquals(aNewAddress(), person.addresses().getMainAddress());
+        Person person = anotherPerson();
+        person.setAddresses(aPersonAddresses());
+        assertEquals(anAddress(), person.addresses().getMainAddress());
     }
 
     @Test

@@ -3,7 +3,7 @@ package com.attus.attusbackendchallenge.fixtures;
 import com.attus.attusbackendchallenge.model.Person;
 
 import static com.attus.attusbackendchallenge.fixtures.BirthDateFixture.*;
-import static com.attus.attusbackendchallenge.fixtures.PersonAddressFixture.*;
+import static com.attus.attusbackendchallenge.fixtures.PersonAddressFixture.aPersonAddresses;
 import static com.attus.attusbackendchallenge.fixtures.PersonNameFixture.*;
 
 public class PersonFixture {
@@ -21,7 +21,7 @@ public class PersonFixture {
                 anotherFirstName(),
                 anotherLastName(),
                 anotherBirthDate(),
-                anotherPersonAddresses()
+                null
         );
     }
 
@@ -30,7 +30,7 @@ public class PersonFixture {
                 aNewFirstName(),
                 aNewLastName(),
                 aNewBirthDate(),
-                aNewPersonAddresses()
+                null
         );
     }
 

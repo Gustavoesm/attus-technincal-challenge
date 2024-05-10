@@ -3,15 +3,15 @@ package com.attus.attusbackendchallenge.fixtures;
 import com.attus.attusbackendchallenge.model.ResidenceIdentifier;
 
 public class ResidenceIdentifierFixture {
-    public static ResidenceIdentifier aResidenceIdentifier() {
+    public static ResidenceIdentifier aNumber() {
         return new ResidenceIdentifier("1");
     }
 
-    public static ResidenceIdentifier anotherResidenceIdentifier() {
+    public static ResidenceIdentifier anotherNumber() {
         return new ResidenceIdentifier("110");
     }
 
-    public static ResidenceIdentifier aNewResidenceIdentifier() {
+    public static ResidenceIdentifier aNewNumber() {
         return new ResidenceIdentifier("2901");
     }
 

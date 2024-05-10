@@ -9,6 +9,44 @@ import java.util.List;
 import static java.util.Objects.isNull;
 
 public class AddressServiceHelper {
+    public static void updateWithNonNullAttributes(Address toReplace, Address newValues) {
+        updatePostalCodeIfNotNull(toReplace, newValues);
+        updateStateIfNotNull(toReplace, newValues);
+        updateCityIfNotNull(toReplace, newValues);
+        updateStreetIfNotNull(toReplace, newValues);
+        updateNumberIfNotNull(toReplace, newValues);
+    }
+
+    public static void updatePostalCodeIfNotNull(Address toReplace, Address newValues) {
+        if (!isNull(newValues.postalCode())) {
+            toReplace.setPostalCode(newValues.postalCode());
+        }
+    }
+
+    public static void updateStateIfNotNull(Address toReplace, Address newValues) {
+        if (!isNull(newValues.state())) {
+            toReplace.setState(newValues.state());
+        }
+    }
+
+    public static void updateCityIfNotNull(Address toReplace, Address newValues) {
+        if (!isNull(newValues.city())) {
+            toReplace.setCity(newValues.city());
+        }
+    }
+
+    public static void updateStreetIfNotNull(Address toReplace, Address newValues) {
+        if (!isNull(newValues.street())) {
+            toReplace.setStreet(newValues.street());
+        }
+    }
+
+    public static void updateNumberIfNotNull(Address toReplace, Address newValues) {
+        if (!isNull(newValues.number())) {
+            toReplace.setNumber(newValues.number());
+        }
+    }
+
     public static Address toAddress(AddressDto dto) {
         return new Address(
                 new BrazilianCEP(dto.postalCode()),

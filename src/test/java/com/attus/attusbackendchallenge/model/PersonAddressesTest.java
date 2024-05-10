@@ -1,9 +1,13 @@
 package com.attus.attusbackendchallenge.model;
 
 import com.attus.attusbackendchallenge.model.exceptions.AddressNotFoundException;
+import com.attus.attusbackendchallenge.model.exceptions.MainAddressNotFoundException;
 import com.attus.attusbackendchallenge.model.exceptions.MainAddressRemovalException;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.attus.attusbackendchallenge.fixtures.AddressFixture.*;
 import static com.attus.attusbackendchallenge.fixtures.PersonAddressFixture.aPersonAddresses;
@@ -23,6 +27,12 @@ class PersonAddressesTest {
     }
 
     @Test
+    void shouldThrowWhenUnableToRetrieveMainAddress() {
+        PersonAddresses testSubject = new PersonAddresses(List.of(anAddress()), DatabaseIdentifier.of(0));
+        assertThrows(MainAddressNotFoundException.class, testSubject::getMainAddress);
+    }
+
+    @Test
     void shouldCorrectlyAddAnAddressesToList() {
         PersonAddresses testSubject = aPersonAddresses();
         testSubject.addAddress(aNewAddress());
@@ -33,69 +43,79 @@ class PersonAddressesTest {
 
     @Test
     void shouldCorrectlyChangeMainAddress() {
-        PersonAddresses testSubject = aPersonAddresses();
-        testSubject.addAddress(aNewAddress());
-        testSubject.changeMainAddress(aNewAddress());
+        Address main = anAddress();
+        Address another = anotherAddress();
+        another.setIdentifier(DatabaseIdentifier.of(1));
+        AddressIdentifier newMain = DatabaseIdentifier.of(2);
+        Address another2 = aNewAddress();
+        another2.setIdentifier(newMain);
+
+        PersonAddresses testSubject = new PersonAddresses(List.of(main, another, another2), main.identifier());
+        testSubject.changeMainAddress(newMain);
         assertEquals(aNewAddress(), testSubject.getMainAddress());
     }
 
     @Test
     void shouldThrowWhenUnableToFindNewMainAddress() {
-        assertFalse(aPersonAddresses().listAll().contains(aNewAddress()));
+        PersonAddresses testSubject = aPersonAddresses();
+        assertFalse(testSubject.listAll().contains(aNewAddress()));
         assertThrows(AddressNotFoundException.class,
-                () -> aPersonAddresses().changeMainAddress(aNewAddress()));
+                () -> testSubject.changeMainAddress(DatabaseIdentifier.of(-1)));
     }
 
     @Test
     void shouldCorrectlyRemoveNonMainAddress() {
-        PersonAddresses testSubject = aPersonAddresses();
-        testSubject.addAddress(anotherAddress());
-        testSubject.addAddress(aNewAddress());
-        assertEquals(3, testSubject.listAll().size());
-        assertTrue(testSubject.listAll().contains(anotherAddress()));
-        testSubject.removeAddress(anotherAddress());
+        Address main = anAddress();
+        Address anotherAddress = anotherAddress();
+        anotherAddress.setIdentifier(DatabaseIdentifier.of(1));
+        Address newAddress = aNewAddress();
+        anotherAddress.setIdentifier(DatabaseIdentifier.of(2));
+        PersonAddresses testSubject = new PersonAddresses(new ArrayList<>(List.of(main, anotherAddress, newAddress)), main.identifier());
+        testSubject.removeAddress(anotherAddress.identifier());
         assertEquals(2, testSubject.listAll().size());
-        assertFalse(testSubject.listAll().contains(anotherAddress()));
-    }
-
-    @Test
-    void shouldCorrectlyRecoverMainAddressAfterLowerIndexAddressRemoval() {
-        PersonAddresses testSubject = aPersonAddresses();
-        testSubject.addAddress(anotherAddress());
-        testSubject.addAddress(aNewAddress());
-        testSubject.changeMainAddress(aNewAddress());
-        testSubject.removeAddress(anAddress());
-        assertEquals(aNewAddress(), testSubject.getMainAddress());
+        assertFalse(testSubject.listAll().contains(anotherAddress));
     }
 
     @Test
     void shouldThrowWhenAttemptingToRemoveLastAddress() {
-        assertThrows(MainAddressRemovalException.class, () -> aPersonAddresses().removeAddress(anAddress()));
+        assertThrows(MainAddressRemovalException.class, () -> aPersonAddresses().removeAddress(anAddress().identifier()));
     }
 
     @Test
     void shouldThrowWhenAttemptingToRemoveMainAddress() {
         PersonAddresses testSubject = aPersonAddresses();
-        testSubject.addAddress(anotherAddress());
-        assertThrows(MainAddressRemovalException.class, () -> testSubject.removeAddress(anAddress()));
+        Address anotherAddress = anotherAddress();
+        anotherAddress.setIdentifier(DatabaseIdentifier.of(1));
+        testSubject.addAddress(anotherAddress);
+        assertThrows(MainAddressRemovalException.class, () -> testSubject.removeAddress(anAddress().identifier()));
     }
 
     @Test
     void shouldCorrectlyReplaceAddressData() {
         PersonAddresses testSubject = aPersonAddresses();
-        testSubject.replaceAddress(anAddress(), aNewAddress());
+        Address aNewAddress = aNewAddress();
+        aNewAddress.setIdentifier(testSubject.getMainAddress().identifier());
+        testSubject.replaceAddress(testSubject.getMainAddress().identifier(), aNewAddress);
         assertEquals(1, testSubject.listAll().size());
-        assertEquals(aNewAddress(), testSubject.getMainAddress());
+        assertEquals(aNewAddress, testSubject.getMainAddress());
     }
 
     @Test
     void shouldCorrectlyReplaceMainAddressData() {
         PersonAddresses testSubject = aPersonAddresses();
-        testSubject.addAddress(anotherAddress());
-        testSubject.addAddress(aNewAddress());
-        testSubject.changeMainAddress(anotherAddress());
-        testSubject.replaceAddress(anotherAddress(), aSecondNewAddress());
-        assertEquals(aSecondNewAddress(), testSubject.getMainAddress());
+        Address anotherAddress = anotherAddress();
+        AddressIdentifier sameAddress = DatabaseIdentifier.of(1);
+        anotherAddress.setIdentifier(sameAddress);
+        Address newAddress = aNewAddress();
+        newAddress.setIdentifier(DatabaseIdentifier.of(2));
+        Address aSecondNewAddress = aSecondNewAddress();
+        aSecondNewAddress.setIdentifier(sameAddress);
+
+        testSubject.addAddress(anotherAddress);
+        testSubject.addAddress(newAddress);
+        testSubject.changeMainAddress(anotherAddress.identifier());
+        testSubject.replaceAddress(anotherAddress.identifier(), aSecondNewAddress);
+        assertEquals(aSecondNewAddress, testSubject.getMainAddress());
         assertEquals(3, testSubject.listAll().size());
     }
 

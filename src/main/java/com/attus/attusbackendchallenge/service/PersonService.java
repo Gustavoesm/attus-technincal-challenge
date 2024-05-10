@@ -51,7 +51,8 @@ public class PersonService {
 
     public Person removePerson(PersonIdentifier id) {
         Person person = this.getPerson(id);
-        addressService.clearAddressesFromPerson(id);
+        PersonAddresses addresses = addressService.clearAddressesFromPerson(id);
+        person.setAddresses(addresses);
         repository.remove(id);
         return person;
     }

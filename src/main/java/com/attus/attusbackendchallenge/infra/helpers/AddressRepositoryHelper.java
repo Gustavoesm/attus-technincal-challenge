@@ -1,6 +1,7 @@
 package com.attus.attusbackendchallenge.infra.helpers;
 
 import com.attus.attusbackendchallenge.model.*;
+import com.attus.attusbackendchallenge.model.exceptions.MainAddressNotFoundException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
@@ -8,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Objects.isNull;
 
 public class AddressRepositoryHelper {
     public static MapSqlParameterSource namedParameters(PersonIdentifier personId, Address address, boolean isMainAddress) {
@@ -44,17 +47,19 @@ public class AddressRepositoryHelper {
         public PersonAddresses mapRow(ResultSet rs, int rowNum) throws SQLException {
             AddressRowMapper addressRowMapper = new AddressRowMapper();
             List<Address> addressList = new ArrayList<>();
-            int mainAddressIndex = -1;
-            int row = 0;
+            AddressIdentifier mainAddressId = null;
             do {
                 addressList.add(addressRowMapper.mapRow(rs, rowNum));
                 if (rs.getBoolean("is_main_address")) {
-                    mainAddressIndex = row;
+                    mainAddressId = DatabaseIdentifier.of(rs.getLong("id"));
                 }
-                row++;
             } while (rs.next());
 
-            return new PersonAddresses(addressList, mainAddressIndex);
+            if (isNull(mainAddressId)) {
+                throw new MainAddressNotFoundException("There is no stored main address for Person");
+            }
+
+            return new PersonAddresses(addressList, mainAddressId);
         }
     }
 
