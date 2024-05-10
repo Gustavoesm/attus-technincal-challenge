@@ -95,6 +95,22 @@ public class AddressIntegrationTest {
     }
 
     @Test
+    void shouldNotBeAbleToRecoverBrazilianState() throws Exception {
+        AddressDto dto = new AddressDto(null, "80250-070", "NZ", "Curitiba", "R. Buenos Aires", "1260 ");
+        String request = objectMapper.writeValueAsString(dto);
+
+        mockMvc.perform(post("/person/102/address")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(status().reason("Invalid brazilian state"))
+                .andExpect(content().bytes(new byte[0]));
+    }
+
+    @Test
     void shouldUpdateAddress() throws Exception {
         String expectedResponse = "{\"id\":1003,\"postalCode\":\"80250-070\",\"state\":\"Paraná\",\"city\":\"Curitiba\",\"street\":\"R. Buenos Aires\",\"number\":\"1260\"}";
         AddressDto dto = new AddressDto(null, "80250-070", "PR", "Curitiba", "R. Buenos Aires", "1260 ");
